@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Search, UserPlus } from 'lucide-react';
+import axios from 'axios';
 import { Candidate } from './types';
 import CandidateList from './components/CandidateList';
 import CandidateForm from './components/CandidateForm';
@@ -12,6 +13,17 @@ function App() {
   const [editingCandidate, setEditingCandidate] = useState<Candidate | null>(null);
   const [showCandidates, setShowCandidates] = useState(false);
 
+  // Charger les candidats depuis l'API au démarrage
+  useEffect(() => {
+    axios.get('/api/candidates')  // Faire une requête GET vers l'API de Vercel
+      .then((response) => {
+        setCandidates(response.data);
+      })
+      .catch((error) => {
+        console.error('Erreur lors du chargement des candidats:', error);
+      });
+  }, []);
+
   const handleAddCandidate = (candidate: Partial<Candidate>) => {
     const newCandidate = {
       ...candidate,
@@ -21,12 +33,19 @@ function App() {
                     Number(candidate.thirdPayment || 0)
     } as Candidate;
     
-    setCandidates(prev => {
-      const updated = [...prev, newCandidate];
-      return updated.sort((a, b) => (b.totalPayments || 0) - (a.totalPayments || 0))
-                   .map((c, index) => ({ ...c, order: index + 1 }));
-    });
-    setShowForm(false);
+    // Envoyer le candidat à l'API de Vercel
+    axios.post('/api/candidates', [...candidates, newCandidate])
+      .then(() => {
+        setCandidates(prev => {
+          const updated = [...prev, newCandidate];
+          return updated.sort((a, b) => (b.totalPayments || 0) - (a.totalPayments || 0))
+                       .map((c, index) => ({ ...c, order: index + 1 }));
+        });
+        setShowForm(false);
+      })
+      .catch((error) => {
+        console.error('Erreur lors de l\'ajout du candidat:', error);
+      });
   };
 
   const handleEditCandidate = (candidate: Candidate) => {
@@ -39,43 +58,77 @@ function App() {
                          Number(updatedCandidate.secondPayment || 0) + 
                          Number(updatedCandidate.thirdPayment || 0);
     
-    setCandidates(prev => {
-      const updated = prev.map(c => 
-        c.id === editingCandidate?.id 
-          ? { ...c, ...updatedCandidate, totalPayments } 
-          : c
-      );
-      return updated.sort((a, b) => (b.totalPayments || 0) - (a.totalPayments || 0))
-                   .map((c, index) => ({ ...c, order: index + 1 }));
-    });
-    setShowForm(false);
-    setEditingCandidate(null);
+    // Mettre à jour le candidat via l'API
+    axios.post('/api/candidates', candidates.map(c =>
+      c.id === editingCandidate?.id 
+        ? { ...c, ...updatedCandidate, totalPayments } 
+        : c
+    ))
+      .then(() => {
+        setCandidates(prev => {
+          const updated = prev.map(c => 
+            c.id === editingCandidate?.id 
+              ? { ...c, ...updatedCandidate, totalPayments } 
+              : c
+          );
+          return updated.sort((a, b) => (b.totalPayments || 0) - (a.totalPayments || 0))
+                       .map((c, index) => ({ ...c, order: index + 1 }));
+        });
+        setShowForm(false);
+        setEditingCandidate(null);
+      })
+      .catch((error) => {
+        console.error('Erreur lors de la mise à jour du candidat:', error);
+      });
   };
 
   const handleDeleteCandidate = (id: string) => {
     if (window.confirm('هل أنت متأكد من حذف هذا المرشح؟')) {
-      setCandidates(prev => {
-        const updated = prev.filter(c => c.id !== id);
-        return updated.sort((a, b) => (b.totalPayments || 0) - (a.totalPayments || 0))
-                     .map((c, index) => ({ ...c, order: index + 1 }));
-      });
+      // Supprimer le candidat via l'API
+      axios.post('/api/candidates', candidates.filter(c => c.id !== id))
+        .then(() => {
+          setCandidates(prev => {
+            const updated = prev.filter(c => c.id !== id);
+            return updated.sort((a, b) => (b.totalPayments || 0) - (a.totalPayments || 0))
+                         .map((c, index) => ({ ...c, order: index + 1 }));
+          });
+        })
+        .catch((error) => {
+          console.error('Erreur lors de la suppression du candidat:', error);
+        });
     }
   };
 
+  const handleDeleteAll = () => {
+    // Supprimer tous les candidats via l'API
+    axios.post('/api/candidates', [])
+      .then(() => {
+        setCandidates([]);
+      })
+      .catch((error) => {
+        console.error('Erreur lors de la suppression de tous les candidats:', error);
+      });
+  };
+
   const handleImportCandidates = (importedCandidates: Candidate[]) => {
-    setCandidates(prev => {
-      const updated = [...prev, ...importedCandidates];
-      return updated.sort((a, b) => (b.totalPayments || 0) - (a.totalPayments || 0))
-                   .map((c, index) => ({ ...c, order: index + 1 }));
-    });
+    // Importer des candidats via l'API
+    axios.post('/api/candidates', [...candidates, ...importedCandidates])
+      .then(() => {
+        setCandidates(prev => {
+          const updated = [...prev, ...importedCandidates];
+          return updated.sort((a, b) => (b.totalPayments || 0) - (a.totalPayments || 0))
+                       .map((c, index) => ({ ...c, order: index + 1 }));
+        });
+      })
+      .catch((error) => {
+        console.error('Erreur lors de l\'importation des candidats:', error);
+      });
   };
 
   if (!showCandidates) {
     return <LandingPage onEnter={() => setShowCandidates(true)} />;
   }
-  const handleDeleteAll = () => {
-    setCandidates([]); // On vide la liste des candidats
-  };
+
   return (
     <div className="min-h-screen bg-gray-50" dir="rtl">
       <nav className="bg-blue-800 shadow-lg">
