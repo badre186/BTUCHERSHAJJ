@@ -5,6 +5,10 @@ import CandidateList from './components/CandidateList';
 import CandidateForm from './components/CandidateForm';
 import LandingPage from './components/LandingPage';
 
+const SHEET_ID = '1o4y35LSGIi9XolbIbkw_PXfxPRHOlzzdApOY0I12FDw';
+const API_KEY = 'AIzaSyB2Wo_yI5Ckd2WtfWiugrIKj6tb6RrCZ-s';
+const SHEET_NAME = 'Candidates';
+
 function App() {
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [filter, setFilter] = useState('');
@@ -12,18 +16,39 @@ function App() {
   const [editingCandidate, setEditingCandidate] = useState<Candidate | null>(null);
   const [showCandidates, setShowCandidates] = useState(false);
   
-  // Charger les candidats depuis localStorage au démarrage
+  // Charger les candidats depuis Google Sheets au démarrage
   useEffect(() => {
-    const savedCandidates = localStorage.getItem('candidates');
-    if (savedCandidates) {
-      setCandidates(JSON.parse(savedCandidates));
-    }
+    fetchCandidatesFromSheet();
   }, []);
 
-
-  const saveCandidatesToLocalStorage = (updatedCandidates: Candidate[]) => {
-    console.log('Saving candidates to localStorage:', updatedCandidates);  // Vérification
-    localStorage.setItem('candidates', JSON.stringify(updatedCandidates));
+  // Fonction pour récupérer les candidats depuis Google Sheets
+  const fetchCandidatesFromSheet = async () => {
+    try {
+      const response = await fetch(
+        `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}?key=${API_KEY}`
+      );
+      const data = await response.json();
+      if (data.values) {
+        // Map les données du Google Sheets aux candidats
+        const loadedCandidates = data.values.slice(1).map((row: string[]) => ({
+          id: row[0],
+          name: row[1],
+          firstPayment: Number(row[2]),
+          secondPayment: Number(row[3]),
+          thirdPayment: Number(row[4]),
+          totalPayments: Number(row[2]) + Number(row[3]) + Number(row[4]),
+        })) as Candidate[];
+        
+        setCandidates(
+          loadedCandidates.sort((a, b) => b.totalPayments - a.totalPayments).map((c, index) => ({
+            ...c,
+            order: index + 1,
+          }))
+        );
+      }
+    } catch (error) {
+      console.error("Erreur lors du chargement des données de Google Sheets :", error);
+    }
   };
 
   const handleAddCandidate = (candidate: Partial<Candidate>) => {
@@ -37,7 +62,6 @@ function App() {
     
     setCandidates(prev => {
       const updated = [...prev, newCandidate];
-      saveCandidatesToLocalStorage(updated);
       return updated.sort((a, b) => (b.totalPayments || 0) - (a.totalPayments || 0))
                    .map((c, index) => ({ ...c, order: index + 1 }));
     });
@@ -60,7 +84,6 @@ function App() {
           ? { ...c, ...updatedCandidate, totalPayments } 
           : c
       );
-      saveCandidatesToLocalStorage(updated);
       return updated.sort((a, b) => (b.totalPayments || 0) - (a.totalPayments || 0))
                    .map((c, index) => ({ ...c, order: index + 1 }));
     });
@@ -72,7 +95,6 @@ function App() {
     if (window.confirm('هل أنت متأكد من حذف هذا المرشح؟')) {
       setCandidates(prev => {
         const updated = prev.filter(c => c.id !== id);
-        saveCandidatesToLocalStorage(updated);
         return updated.sort((a, b) => (b.totalPayments || 0) - (a.totalPayments || 0))
                      .map((c, index) => ({ ...c, order: index + 1 }));
       });
@@ -81,13 +103,11 @@ function App() {
 
   const handleDeleteAll = () => {
     setCandidates([]);
-    localStorage.removeItem('candidates'); // Supprime tous les candidats du localStorage
   };
 
   const handleImportCandidates = (importedCandidates: Candidate[]) => {
     setCandidates(prev => {
       const updated = [...prev, ...importedCandidates];
-      saveCandidatesToLocalStorage(updated);
       return updated.sort((a, b) => (b.totalPayments || 0) - (a.totalPayments || 0))
                    .map((c, index) => ({ ...c, order: index + 1 }));
     });
