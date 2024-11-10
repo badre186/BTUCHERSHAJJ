@@ -36,13 +36,29 @@ function App() {
         return;
       }
 
+      // Mappage de toutes les colonnes du Google Sheets en fonction de l'ordre des colonnes
       const loadedCandidates = data.values.slice(1).map((row: string[]) => ({
-        id: row[0],
+        order: row[0],
         name: row[1],
-        firstPayment: Number(row[2]),
-        secondPayment: Number(row[3]),
-        thirdPayment: Number(row[4]),
-        totalPayments: Number(row[2]) + Number(row[3]) + Number(row[4]),
+        birthDate: row[2],
+        birthCountry: row[3],
+        birthPlace: row[4],
+        address: row[5],
+        passportProfession: row[6],
+        projectProfession: row[7],
+        passportNumber: row[8],
+        issueDate: row[9],
+        expiryDate: row[10],
+        issuingAuthority: row[11],
+        idNumber: row[12],
+        isReserve: row[13] === 'TRUE',
+        agent: row[14],
+        representative: row[15],
+        phoneNumber: row[16],
+        firstPayment: Number(row[17]) || 0,
+        secondPayment: Number(row[18]) || 0,
+        thirdPayment: Number(row[19]) || 0,
+        totalPayments: (Number(row[17]) || 0) + (Number(row[18]) || 0) + (Number(row[19]) || 0),
       })) as Candidate[];
 
       setCandidates(
