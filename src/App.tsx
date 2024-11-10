@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Search, UserPlus } from 'lucide-react';
-import axios from 'axios';
 import { Candidate } from './types';
 import CandidateList from './components/CandidateList';
 import CandidateForm from './components/CandidateForm';
@@ -12,17 +11,20 @@ function App() {
   const [showForm, setShowForm] = useState(false);
   const [editingCandidate, setEditingCandidate] = useState<Candidate | null>(null);
   const [showCandidates, setShowCandidates] = useState(false);
-
-  // Charger les candidats depuis l'API au démarrage
+  
+  // Charger les candidats depuis localStorage au démarrage
   useEffect(() => {
-    axios.get('/api/candidates')  // Faire une requête GET vers l'API de Vercel
-      .then((response) => {
-        setCandidates(response.data);
-      })
-      .catch((error) => {
-        console.error('Erreur lors du chargement des candidats:', error);
-      });
+    const savedCandidates = localStorage.getItem('candidates');
+    if (savedCandidates) {
+      setCandidates(JSON.parse(savedCandidates));
+    }
   }, []);
+
+
+  const saveCandidatesToLocalStorage = (updatedCandidates: Candidate[]) => {
+    console.log('Saving candidates to localStorage:', updatedCandidates);  // Vérification
+    localStorage.setItem('candidates', JSON.stringify(updatedCandidates));
+  };
 
   const handleAddCandidate = (candidate: Partial<Candidate>) => {
     const newCandidate = {
@@ -33,19 +35,13 @@ function App() {
                     Number(candidate.thirdPayment || 0)
     } as Candidate;
     
-    // Envoyer le candidat à l'API de Vercel
-    axios.post('/api/candidates', [...candidates, newCandidate])
-      .then(() => {
-        setCandidates(prev => {
-          const updated = [...prev, newCandidate];
-          return updated.sort((a, b) => (b.totalPayments || 0) - (a.totalPayments || 0))
-                       .map((c, index) => ({ ...c, order: index + 1 }));
-        });
-        setShowForm(false);
-      })
-      .catch((error) => {
-        console.error('Erreur lors de l\'ajout du candidat:', error);
-      });
+    setCandidates(prev => {
+      const updated = [...prev, newCandidate];
+      saveCandidatesToLocalStorage(updated);
+      return updated.sort((a, b) => (b.totalPayments || 0) - (a.totalPayments || 0))
+                   .map((c, index) => ({ ...c, order: index + 1 }));
+    });
+    setShowForm(false);
   };
 
   const handleEditCandidate = (candidate: Candidate) => {
@@ -58,71 +54,43 @@ function App() {
                          Number(updatedCandidate.secondPayment || 0) + 
                          Number(updatedCandidate.thirdPayment || 0);
     
-    // Mettre à jour le candidat via l'API
-    axios.post('/api/candidates', candidates.map(c =>
-      c.id === editingCandidate?.id 
-        ? { ...c, ...updatedCandidate, totalPayments } 
-        : c
-    ))
-      .then(() => {
-        setCandidates(prev => {
-          const updated = prev.map(c => 
-            c.id === editingCandidate?.id 
-              ? { ...c, ...updatedCandidate, totalPayments } 
-              : c
-          );
-          return updated.sort((a, b) => (b.totalPayments || 0) - (a.totalPayments || 0))
-                       .map((c, index) => ({ ...c, order: index + 1 }));
-        });
-        setShowForm(false);
-        setEditingCandidate(null);
-      })
-      .catch((error) => {
-        console.error('Erreur lors de la mise à jour du candidat:', error);
-      });
+    setCandidates(prev => {
+      const updated = prev.map(c => 
+        c.id === editingCandidate?.id 
+          ? { ...c, ...updatedCandidate, totalPayments } 
+          : c
+      );
+      saveCandidatesToLocalStorage(updated);
+      return updated.sort((a, b) => (b.totalPayments || 0) - (a.totalPayments || 0))
+                   .map((c, index) => ({ ...c, order: index + 1 }));
+    });
+    setShowForm(false);
+    setEditingCandidate(null);
   };
 
   const handleDeleteCandidate = (id: string) => {
     if (window.confirm('هل أنت متأكد من حذف هذا المرشح؟')) {
-      // Supprimer le candidat via l'API
-      axios.post('/api/candidates', candidates.filter(c => c.id !== id))
-        .then(() => {
-          setCandidates(prev => {
-            const updated = prev.filter(c => c.id !== id);
-            return updated.sort((a, b) => (b.totalPayments || 0) - (a.totalPayments || 0))
-                         .map((c, index) => ({ ...c, order: index + 1 }));
-          });
-        })
-        .catch((error) => {
-          console.error('Erreur lors de la suppression du candidat:', error);
-        });
+      setCandidates(prev => {
+        const updated = prev.filter(c => c.id !== id);
+        saveCandidatesToLocalStorage(updated);
+        return updated.sort((a, b) => (b.totalPayments || 0) - (a.totalPayments || 0))
+                     .map((c, index) => ({ ...c, order: index + 1 }));
+      });
     }
   };
 
   const handleDeleteAll = () => {
-    // Supprimer tous les candidats via l'API
-    axios.post('/api/candidates', [])
-      .then(() => {
-        setCandidates([]);
-      })
-      .catch((error) => {
-        console.error('Erreur lors de la suppression de tous les candidats:', error);
-      });
+    setCandidates([]);
+    localStorage.removeItem('candidates'); // Supprime tous les candidats du localStorage
   };
 
   const handleImportCandidates = (importedCandidates: Candidate[]) => {
-    // Importer des candidats via l'API
-    axios.post('/api/candidates', [...candidates, ...importedCandidates])
-      .then(() => {
-        setCandidates(prev => {
-          const updated = [...prev, ...importedCandidates];
-          return updated.sort((a, b) => (b.totalPayments || 0) - (a.totalPayments || 0))
-                       .map((c, index) => ({ ...c, order: index + 1 }));
-        });
-      })
-      .catch((error) => {
-        console.error('Erreur lors de l\'importation des candidats:', error);
-      });
+    setCandidates(prev => {
+      const updated = [...prev, ...importedCandidates];
+      saveCandidatesToLocalStorage(updated);
+      return updated.sort((a, b) => (b.totalPayments || 0) - (a.totalPayments || 0))
+                   .map((c, index) => ({ ...c, order: index + 1 }));
+    });
   };
 
   if (!showCandidates) {
