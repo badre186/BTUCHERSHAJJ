@@ -55,17 +55,6 @@ export default function CandidateForm({ candidate, onSubmit, onClose, isEdit }: 
 
         <form onSubmit={handleSubmit} className="space-y-4 text-right" dir="rtl">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Existing fields */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700">الترتيب</label>
-              <input
-                type="number"
-                name="order"
-                value={formData.order || ''}
-                onChange={handleChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
-              />
-            </div>
             
             <div>
               <label className="block text-sm font-medium text-gray-700">الاسم</label>
@@ -78,7 +67,84 @@ export default function CandidateForm({ candidate, onSubmit, onClose, isEdit }: 
               />
             </div>
 
-            {/* Payment fields */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">تاريخ الميلاد</label>
+              <input
+                type="date"
+                name="birthDate"
+                value={formData.birthDate || ''}
+                onChange={handleChange}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">بلد الميلاد</label>
+              <input
+                type="text"
+                name="birthCountry"
+                value={formData.birthCountry || ''}
+                onChange={handleChange}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">مكان الميلاد</label>
+              <input
+                type="text"
+                name="birthPlace"
+                value={formData.birthPlace || ''}
+                onChange={handleChange}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">العنوان</label>
+              <input
+                type="text"
+                name="address"
+                value={formData.address || ''}
+                onChange={handleChange}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">المهنة (جواز السفر)</label>
+              <input
+                type="text"
+                name="passportProfession"
+                value={formData.passportProfession || ''}
+                onChange={handleChange}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">المهنة (المشروع)</label>
+              <input
+                type="text"
+                name="projectProfession"
+                value={formData.projectProfession || ''}
+                onChange={handleChange}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">رقم جواز السفر</label>
+              <input
+                type="text"
+                name="passportNumber"
+                value={formData.passportNumber || ''}
+                onChange={handleChange}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
+              />
+            </div>
+
+            {/* Champs de paiement */}
             <div>
               <label className="block text-sm font-medium text-gray-700">الدفعة الأولى</label>
               <input
@@ -112,31 +178,6 @@ export default function CandidateForm({ candidate, onSubmit, onClose, isEdit }: 
               />
             </div>
 
-            {/* Continue with other existing fields */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700">تاريخ الميلاد</label>
-              <input
-                type="date"
-                name="birthDate"
-                value={formData.birthDate || ''}
-                onChange={handleChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
-              />
-            </div>
-
-            {/* Add all other existing fields here */}
-            {/* ... */}
-
-            <div className="md:col-span-3">
-              <label className="block text-sm font-medium text-gray-700">ملاحظات</label>
-              <textarea
-                name="notes"
-                value={formData.notes || ''}
-                onChange={handleChange}
-                rows={3}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
-              />
-            </div>
           </div>
 
           <div className="flex justify-end space-x-2 space-x-reverse mt-6">
