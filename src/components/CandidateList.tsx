@@ -118,4 +118,95 @@ export default function CandidateList({ candidates, onEdit, onDelete, onDeleteAl
             </thead>
             <tbody className="divide-y divide-gray-200">
               {filteredCandidates.map((candidate) => (
-                <tr key={candidate.id} className="hover:bg-
+                <tr key={candidate.id} className="hover:bg-blue-50 transition-colors">
+                  <td className="px-4 py-3 text-sm">{candidate.order}</td>
+                  <td className="px-4 py-3 text-sm">{candidate.name}</td>
+                  <td className="px-4 py-3 text-sm">{candidate.projectProfession}</td>
+                  <td className="px-4 py-3 text-sm">{candidate.isReserve}</td>
+                  <td className="px-4 py-3 text-sm">{candidate.representative}</td>
+                  <td className="px-4 py-3 text-sm">{candidate.phoneNumber}</td>
+                  <td className="px-4 py-3 text-sm">{candidate.firstPayment}</td>
+                  <td className="px-4 py-3 text-sm">{candidate.secondPayment}</td>
+                  <td className="px-4 py-3 text-sm">{candidate.thirdPayment}</td>
+                  <td className="px-4 py-3 text-sm font-bold">{candidate.totalPayments}</td>
+                  <td>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => setSelectedCandidate(candidate)}
+                        className="text-yellow-500 hover:text-yellow-600 transition-colors"
+                      >
+                        <Eye size={20} />
+                      </button>
+                      <button
+                        onClick={() => onEdit(candidate)}
+                        className="text-blue-600 hover:text-blue-800 transition-colors"
+                      >
+                        <Edit size={20} />
+                      </button>
+                      <button
+                        onClick={() => onDelete(candidate.id)}
+                        className="text-red-600 hover:text-red-800 transition-colors"
+                      >
+                        <Trash2 size={20} />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {selectedCandidate && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto relative">
+            <button
+              onClick={() => setSelectedCandidate(null)}
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+            >
+              <X size={24} />
+            </button>
+            
+            <h2 className="text-2xl font-bold text-blue-800 mb-4">تفاصيل المرشح</h2>
+
+            <div className="space-y-4">
+              <div className="flex">
+                <div className="w-1/2 pr-4">
+                  <div className="text-sm text-gray-600">الاسم:</div>
+                  <div className="font-semibold">{selectedCandidate.name}</div>
+                </div>
+                <div className="w-1/2 pl-4">
+                  <div className="text-sm text-gray-600">المهنة المعتمدة للعمل:</div>
+                  <div className="font-semibold">{selectedCandidate.projectProfession}</div>
+                </div>
+              </div>
+
+              <div className="flex">
+                <div className="w-1/2 pr-4">
+                  <div className="text-sm text-gray-600">احتياطي؟</div>
+                  <div className="font-semibold">{selectedCandidate.isReserve}</div>
+                </div>
+                <div className="w-1/2 pl-4">
+                  <div className="text-sm text-gray-600">المندوب:</div>
+                  <div className="font-semibold">{selectedCandidate.representative}</div>
+                </div>
+              </div>
+
+              <div className="flex">
+                <div className="w-1/2 pr-4">
+                  <div className="text-sm text-gray-600">رقم الجوال:</div>
+                  <div className="font-semibold">{selectedCandidate.phoneNumber}</div>
+                </div>
+                <div className="w-1/2 pl-4">
+                  <div className="text-sm text-gray-600">مجموع الدفعات:</div>
+                  <div className="font-semibold">{selectedCandidate.totalPayments}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
