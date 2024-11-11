@@ -57,14 +57,14 @@ export default function CandidateList({ candidates, onEdit, onDelete, onDeleteAl
           totalPayments: Number(row.firstPayment || 0) + Number(row.secondPayment || 0) + Number(row.thirdPayment || 0)
         }));
         
-        onImport(importedCandidates as Candidate[]);
+        onImport(importedCandidates as Candidate[]);  // Appel de la méthode onImport
       };
       reader.readAsArrayBuffer(file);
     }
   };
 
   const handleDeleteAll = () => {
-    onDeleteAll();
+    onDeleteAll();  // Appel de la méthode onDeleteAll
   };
 
   return (
@@ -79,19 +79,19 @@ export default function CandidateList({ candidates, onEdit, onDelete, onDeleteAl
               <input
                 type="file"
                 accept=".xlsx,.xls"
-                onChange={importFromExcel}
+                onChange={importFromExcel}  // Appel de la fonction d'importation
                 className="hidden"
               />
             </label>
             <button
-              onClick={exportToExcel}
+              onClick={exportToExcel}  // Appel de la fonction d'exportation
               className="flex items-center gap-2 bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition-colors"
             >
               <Download size={20} />
               تصدير إلى Excel
             </button>
             <button
-              onClick={handleDeleteAll}
+              onClick={handleDeleteAll}  // Appel de la fonction de suppression de tous les candidats
               className="flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors"
             >
               <Trash2 size={20} />
@@ -118,183 +118,4 @@ export default function CandidateList({ candidates, onEdit, onDelete, onDeleteAl
             </thead>
             <tbody className="divide-y divide-gray-200">
               {filteredCandidates.map((candidate) => (
-                <tr key={candidate.id} className="hover:bg-blue-50 transition-colors">
-                  <td className="px-4 py-3 text-sm">{candidate.order}</td>
-                  <td className="px-4 py-3 text-sm">{candidate.name}</td>
-                  <td className="px-4 py-3 text-sm">{candidate.projectProfession}</td>
-                  <td className="px-4 py-3 text-sm">{candidate.isReserve}</td>
-                  <td className="px-4 py-3 text-sm">{candidate.representative}</td>
-                  <td className="px-4 py-3 text-sm">{candidate.phoneNumber}</td>
-                  <td className="px-4 py-3 text-sm">{candidate.firstPayment}</td>
-                  <td className="px-4 py-3 text-sm">{candidate.secondPayment}</td>
-                  <td className="px-4 py-3 text-sm">{candidate.thirdPayment}</td>
-                  <td className="px-4 py-3 text-sm font-bold">{candidate.totalPayments}</td>
-                  <td>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => setSelectedCandidate(candidate)}
-                        className="text-yellow-500 hover:text-yellow-600 transition-colors"
-                      >
-                        <Eye size={20} />
-                      </button>
-                      <button
-                        onClick={() => onEdit(candidate)}
-                        className="text-blue-600 hover:text-blue-800 transition-colors"
-                      >
-                        <Edit size={20} />
-                      </button>
-                      <button
-                        onClick={() => onDelete(candidate.id)}
-                        className="text-red-600 hover:text-red-800 transition-colors"
-                      >
-                        <Trash2 size={20} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {selectedCandidate && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto relative">
-            <button
-              onClick={() => setSelectedCandidate(null)}
-              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
-            >
-              <X size={24} />
-            </button>
-            
-            <h2 className="text-2xl font-bold mb-6 text-right text-blue-800">
-              تفاصيل المرشح: {selectedCandidate.name}
-            </h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-right">
-              <div>
-                <h3 className="font-semibold text-gray-700 mb-2">المعلومات الشخصية</h3>
-                <dl className="space-y-2">
-                  <div>
-                    <dt className="text-sm text-gray-500">الترتيب</dt>
-                    <dd className="text-gray-900">{selectedCandidate.order}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-sm text-gray-500">الاسم</dt>
-                    <dd className="text-gray-900">{selectedCandidate.name}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-sm text-gray-500">تاريخ الميلاد</dt>
-                    <dd className="text-gray-900">{selectedCandidate.birthDate}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-sm text-gray-500">بلد الميلاد</dt>
-                    <dd className="text-gray-900">{selectedCandidate.birthCountry}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-sm text-gray-500">محل الميلاد</dt>
-                    <dd className="text-gray-900">{selectedCandidate.birthPlace}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-sm text-gray-500">العنوان</dt>
-                    <dd className="text-gray-900">{selectedCandidate.address}</dd>
-                  </div>
-                </dl>
-              </div>
-
-              <div>
-                <h3 className="font-semibold text-gray-700 mb-2">معلومات جواز السفر</h3>
-                <dl className="space-y-2">
-                  <div>
-                    <dt className="text-sm text-gray-500">رقم الجواز</dt>
-                    <dd className="text-gray-900">{selectedCandidate.passportNumber}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-sm text-gray-500">تاريخ الإصدار</dt>
-                    <dd className="text-gray-900">{selectedCandidate.issueDate}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-sm text-gray-500">تاريخ الانتهاء</dt>
-                    <dd className="text-gray-900">{selectedCandidate.expiryDate}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-sm text-gray-500">جهة الإصدار</dt>
-                    <dd className="text-gray-900">{selectedCandidate.issuingAuthority}</dd>
-                  </div>
-                </dl>
-              </div>
-
-              <div>
-                <h3 className="font-semibold text-gray-700 mb-2">المعلومات المهنية</h3>
-                <dl className="space-y-2">
-                  <div>
-                    <dt className="text-sm text-gray-500">المهنة في جواز السفر</dt>
-                    <dd className="text-gray-900">{selectedCandidate.passportProfession}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-sm text-gray-500">المهنة المعتمدة للعمل</dt>
-                    <dd className="text-gray-900">{selectedCandidate.projectProfession}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-sm text-gray-500">احتياطي</dt>
-                    <dd className="text-gray-900">{selectedCandidate.isReserve}</dd>
-                  </div>
-                </dl>
-              </div>
-
-              <div>
-                <h3 className="font-semibold text-gray-700 mb-2">المعلومات المالية</h3>
-                <dl className="space-y-2">
-                  <div>
-                    <dt className="text-sm text-gray-500">الدفعة الأولى</dt>
-                    <dd className="text-gray-900">{selectedCandidate.firstPayment}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-sm text-gray-500">الدفعة الثانية</dt>
-                    <dd className="text-gray-900">{selectedCandidate.secondPayment}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-sm text-gray-500">الدفعة الثالثة</dt>
-                    <dd className="text-gray-900">{selectedCandidate.thirdPayment}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-sm text-gray-500">مجموع الدفعات</dt>
-                    <dd className="text-gray-900 font-bold">{selectedCandidate.totalPayments}</dd>
-                  </div>
-                </dl>
-              </div>
-
-              <div>
-                <h3 className="font-semibold text-gray-700 mb-2">معلومات إضافية</h3>
-                <dl className="space-y-2">
-                  <div>
-                    <dt className="text-sm text-gray-500">رقم الهوية</dt>
-                    <dd className="text-gray-900">{selectedCandidate.idNumber}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-sm text-gray-500">الوكيل</dt>
-                    <dd className="text-gray-900">{selectedCandidate.agent}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-sm text-gray-500">المندوب</dt>
-                    <dd className="text-gray-900">{selectedCandidate.representative}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-sm text-gray-500">رقم الجوال</dt>
-                    <dd className="text-gray-900">{selectedCandidate.phoneNumber}</dd>
-                  </div>
-                </dl>
-              </div>
-
-              <div className="md:col-span-2">
-                <h3 className="font-semibold text-gray-700 mb-2">ملاحظات</h3>
-                <p className="text-gray-900 whitespace-pre-wrap">{selectedCandidate.notes}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
+                <tr key={candidate.id} className="hover:bg-
