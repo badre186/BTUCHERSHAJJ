@@ -119,7 +119,28 @@ export default function CandidateForm({ candidate, onSubmit, onClose, isEdit }: 
               />
             </div>
 
-            {/* Champs supplémentaires */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">المهنة في جواز السفر</label>
+              <input
+                type="text"
+                name="passportProfession"
+                value={formData.passportProfession || ''}
+                onChange={handleChange}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">المهنة في المشروع</label>
+              <input
+                type="text"
+                name="projectProfession"
+                value={formData.projectProfession || ''}
+                onChange={handleChange}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
+              />
+            </div>
+
             <div>
               <label className="block text-sm font-medium text-gray-700">رقم جواز السفر</label>
               <input
@@ -165,6 +186,31 @@ export default function CandidateForm({ candidate, onSubmit, onClose, isEdit }: 
             </div>
 
             <div>
+              <label className="block text-sm font-medium text-gray-700">رقم الهوية</label>
+              <input
+                type="text"
+                name="idNumber"
+                value={formData.idNumber || ''}
+                onChange={handleChange}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">هل هو احتياطي؟</label>
+              <input
+                type="checkbox"
+                name="isReserve"
+                checked={formData.isReserve || false}
+                onChange={e => setFormData(prev => ({
+                  ...prev,
+                  isReserve: e.target.checked
+                }))}
+                className="mt-1 block"
+              />
+            </div>
+
+            <div>
               <label className="block text-sm font-medium text-gray-700">الوكيل</label>
               <input
                 type="text"
@@ -176,49 +222,8 @@ export default function CandidateForm({ candidate, onSubmit, onClose, isEdit }: 
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">الدفع الأول</label>
+              <label className="block text-sm font-medium text-gray-700">الممثل</label>
               <input
-                type="number"
-                name="firstPayment"
-                value={formData.firstPayment || ''}
-                onChange={handleChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700">الدفع الثاني</label>
-              <input
-                type="number"
-                name="secondPayment"
-                value={formData.secondPayment || ''}
-                onChange={handleChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700">الدفع الثالث</label>
-              <input
-                type="number"
-                name="thirdPayment"
-                value={formData.thirdPayment || ''}
-                onChange={handleChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-end space-x-2 space-x-reverse mt-6">
-            <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors">
-              {isEdit ? 'تحديث' : 'إضافة'}
-            </button>
-            <button type="button" onClick={onClose} className="bg-gray-200 text-gray-800 px-6 py-2 rounded-md hover:bg-gray-300 transition-colors">
-              إلغاء
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
-}
+                type="text"
+                name="representative"
+                value={form
