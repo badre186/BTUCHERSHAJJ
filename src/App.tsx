@@ -16,7 +16,7 @@ function App() {
   const [editingCandidate, setEditingCandidate] = useState<Candidate | null>(null);
   const [showCandidates, setShowCandidates] = useState(false);
 
-  // Fonction pour charger les candidats depuis Google Sheets
+  // Charger les candidats depuis Google Sheets
   const fetchCandidatesFromSheet = async () => {
     try {
       const response = await fetch(
@@ -36,7 +36,6 @@ function App() {
         return;
       }
 
-      // Mappage de toutes les colonnes du Google Sheets en fonction de l'ordre des colonnes
       const loadedCandidates = data.values.slice(1).map((row: string[]) => ({
         order: row[0],
         name: row[1],
