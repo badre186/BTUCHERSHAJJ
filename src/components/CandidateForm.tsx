@@ -86,7 +86,6 @@ export default function CandidateForm({ candidate, onSubmit, onClose, isEdit }: 
               />
             </div>
 
-            {/* Ajout des autres champs similaires */}
             <div>
               <label className="block text-sm font-medium text-gray-700">بلد الميلاد</label>
               <input
@@ -120,55 +119,64 @@ export default function CandidateForm({ candidate, onSubmit, onClose, isEdit }: 
               />
             </div>
 
+            {/* Champs supplémentaires */}
             <div>
-              <label className="block text-sm font-medium text-gray-700">المهنة في جواز السفر</label>
+              <label className="block text-sm font-medium text-gray-700">رقم جواز السفر</label>
               <input
                 type="text"
-                name="passportProfession"
-                value={formData.passportProfession || ''}
+                name="passportNumber"
+                value={formData.passportNumber || ''}
                 onChange={handleChange}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">المهنة في المشروع</label>
+              <label className="block text-sm font-medium text-gray-700">تاريخ الإصدار</label>
               <input
-                type="text"
-                name="projectProfession"
-                value={formData.projectProfession || ''}
-                onChange={handleChange}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
-              />
-            </div>
-
-            {/* Continuez avec les autres champs requis */}
-            {/* Exemples pour téléphone, représentant, etc. */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700">رقم الهاتف</label>
-              <input
-                type="text"
-                name="phoneNumber"
-                value={formData.phoneNumber || ''}
+                type="date"
+                name="issueDate"
+                value={formData.issueDate || ''}
                 onChange={handleChange}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">الممثل</label>
+              <label className="block text-sm font-medium text-gray-700">تاريخ الانتهاء</label>
               <input
-                type="text"
-                name="representative"
-                value={formData.representative || ''}
+                type="date"
+                name="expiryDate"
+                value={formData.expiryDate || ''}
                 onChange={handleChange}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
               />
             </div>
 
-            {/* Paiements */}
             <div>
-              <label className="block text-sm font-medium text-gray-700">الدفعة الأولى</label>
+              <label className="block text-sm font-medium text-gray-700">الجهة المصدرة</label>
+              <input
+                type="text"
+                name="issuingAuthority"
+                value={formData.issuingAuthority || ''}
+                onChange={handleChange}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">الوكيل</label>
+              <input
+                type="text"
+                name="agent"
+                value={formData.agent || ''}
+                onChange={handleChange}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">الدفع الأول</label>
               <input
                 type="number"
                 name="firstPayment"
@@ -179,7 +187,7 @@ export default function CandidateForm({ candidate, onSubmit, onClose, isEdit }: 
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">الدفعة الثانية</label>
+              <label className="block text-sm font-medium text-gray-700">الدفع الثاني</label>
               <input
                 type="number"
                 name="secondPayment"
@@ -190,7 +198,7 @@ export default function CandidateForm({ candidate, onSubmit, onClose, isEdit }: 
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">الدفعة الثالثة</label>
+              <label className="block text-sm font-medium text-gray-700">الدفع الثالث</label>
               <input
                 type="number"
                 name="thirdPayment"
